@@ -19,6 +19,7 @@ public class MainController {
     Scanner sc = new Scanner(System.in);
     ShowMenu showMenu = new ShowMenuDK();
     List<Pizza> pizzaList = getAllPizzasFromSource();
+    List<Order> bestillinger = new ArrayList<>();
 
     public void runProgram() {
         showMenu.showMenu();
@@ -27,7 +28,7 @@ public class MainController {
             switch (choice) {
                 case 1: showPizzaMenu();break;
                 case 2: createOrder();break;
-                case 3: editOrder();break;
+                case 3: showOrder();break;
                 case 4: confirmOrder();break;
                 default:choice=9;break;
             }
@@ -39,19 +40,33 @@ public class MainController {
         }
 
     }
-    //Createorder 1. Via alle pizza'er.
-    private void createOrder() {
-        int lchoice = 0;
-        while (lchoice != 9) {
-            choice = sc.nextInt();
-            switch (lchoice) {
-                case 1: showMenu = new ShowMenuDK();break;
 
-            }
-
+    public void showOrder(){
+        System.out.println(" Viser Bestillinger ");
+        for (Order order:bestillinger) {
+            System.out.println(order);
         }
     }
+    //Createorder 1. Via alle pizza'er.
+    private void createOrder() {
+        //string customerName, int phoneNumber
+        sc.nextLine();
+        System.out.println("Hvad hedder du?");
+        String customerName = sc.nextLine();
+        System.out.println("Hvad er dit nummer?");
+        int phoneNumber = sc.nextInt();
+        Order order = new Order(customerName, phoneNumber);
+        int lchoice = 0;
+        while (lchoice != 99) {
+            System.out.println("Indtast Pizza nummer, 99 for exit");
+            lchoice = sc.nextInt();
+            Pizza pizza = getPizzaById(lchoice);
+            order.addPizzaToOrder(pizza);
+        }
 
+        bestillinger.add(order);
+        showMenu.showMenu();
+    }
 
 
     private void confirmOrder(){
@@ -81,6 +96,16 @@ public class MainController {
             e.printStackTrace();
         }
         return returnList;
+    }
+
+    public Pizza getPizzaById(int id){
+        Pizza returPizza = null;
+        for (Pizza pizza:pizzaList) {
+            if (pizza.getNumber() == id){
+                return pizza;
+            }
+        }
+        return returPizza;
     }
 
 }
